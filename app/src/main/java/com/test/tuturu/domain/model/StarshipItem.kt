@@ -1,7 +1,5 @@
 package com.test.tuturu.domain.model
 
-import com.google.gson.annotations.SerializedName
-
 data class StarshipItem(
     override val name: String,
     val model: String,
@@ -14,15 +12,24 @@ data class StarshipItem(
     val cargoCapacity: String
 ) : Item() {
 
-    override fun toString(): String {
-        return "Name: $name\n" +
-                "Model: $model\n" +
-                "Manufacturer $manufacturer\n" +
-                "Length: $length\n" +
-                "CostInCredits $costInCredits\n" +
-                "Crew: $crew\n" +
-                "Passengers: $passengers\n" +
-                "StarshipClass: $starshipClass\n" +
-                "CargoCapacity: $cargoCapacity"
+    override val data: List<Pair<String, String>> = listOf(
+        Pair(modelKey, model),
+        Pair(manufacturerKey, manufacturer),
+        Pair(lengthKey, length),
+        Pair(costInCreditsKey, costInCredits)
+    )
+
+    companion object {
+       const val modelKey = "Model:"
+       const val manufacturerKey = "Manufacturer:"
+       const val lengthKey = "Length:"
+       const val costInCreditsKey = "Cost in credits:"
     }
+
+    override fun getDataType(): DataType {
+        return DataType.STARSHIPS
+    }
+
+
 }
+

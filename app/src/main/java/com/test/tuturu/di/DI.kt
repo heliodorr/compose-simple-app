@@ -3,6 +3,7 @@ package com.test.tuturu.di
 import com.test.tuturu.data.api.SWApi
 import com.test.tuturu.data.repository.NetworkRepositoryImpl
 import com.test.tuturu.domain.repository.NetworkRepository
+import com.test.tuturu.domain.usecase.GetPlanetsUseCase
 import com.test.tuturu.domain.usecase.GetStarshipsUseCase
 import com.test.tuturu.presentation.vm.MainViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -14,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 val appModule = module {
 
     single<SWApi> {
-
         Retrofit.Builder()
             .baseUrl("https://swapi.dev/api/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -31,8 +31,15 @@ val appModule = module {
         GetStarshipsUseCase( get() )
     }
 
+    single<GetPlanetsUseCase> {
+        GetPlanetsUseCase( get() )
+    }
+
     viewModel {
-        MainViewModel(get())
+        MainViewModel(
+            get(),
+            get()
+        )
     }
 
 

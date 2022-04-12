@@ -1,7 +1,5 @@
 package com.test.tuturu.domain.model
 
-import com.google.gson.annotations.SerializedName
-
 data class PlanetItem(
     override val name: String,
     val climate: String,
@@ -14,15 +12,24 @@ data class PlanetItem(
     val terrain: String
 ): Item() {
 
-    override fun toString(): String {
-        return "name='$name'" +
-                "climate=$climate " +
-                "diameter='$diameter', " +
-                "gravity='$gravity', " +
-                "orbitalPeriod='$orbitalPeriod', " +
-                "population='$population', " +
-                "rotationPeriod='$rotationPeriod', " +
-                "surfaceWater='$surfaceWater', " +
-                "terrain='$terrain')"
+    override val data: List<Pair<String, String>> = listOf(
+        Pair(climateKey, climate),
+        Pair(diameterKey, diameter),
+        Pair(gravityKey, gravity),
+        Pair(orbitalPeriodKey, orbitalPeriod)
+    )
+
+    companion object{
+        const val climateKey = "Climate:"
+        const val diameterKey = "Diameter:"
+        const val gravityKey = "Gravity:"
+        const val orbitalPeriodKey = "Orbital period:"
     }
+
+    override fun getDataType(): DataType {
+        return DataType.PLANETS
+    }
+
+
 }
+

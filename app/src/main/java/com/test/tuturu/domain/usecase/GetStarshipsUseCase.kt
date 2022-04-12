@@ -1,6 +1,9 @@
 package com.test.tuturu.domain.usecase
 
+import android.content.ClipData
 import com.test.tuturu.common.Status
+import com.test.tuturu.domain.model.DataType
+import com.test.tuturu.domain.model.Item
 import com.test.tuturu.domain.model.StarshipItem
 import com.test.tuturu.domain.repository.NetworkRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,18 +13,20 @@ import java.io.IOException
 
 class GetStarshipsUseCase(
     val networkRepository: NetworkRepository
-) {
+): UseCase() {
 
-    operator fun invoke(): Flow<Status<List<StarshipItem>>> = flow {
+    override val dataType: String = DataType.STARSHIPS.name
+
+    override operator fun invoke(): Flow<Status<List<Item>>> = flow {
 
         try {
-            emit(Status.Loading<List<StarshipItem>>())
+            emit(Status.Loading<List<Item>>())
             val data = networkRepository.getStarshipItemsList()
-            emit(Status.Success(data = data))
+            emit(Status.Success<List<Item>>(data = data))
         } catch (e: HttpException){
-            emit(Status.Error<List<StarshipItem>>("HttpError"))
+            emit(Status.Error<List<Item>>("HttpError"))
         } catch (e: IOException) {
-            emit(Status.Error<List<StarshipItem>>("IOError"))
+            emit(Status.Error<List<Item>>("IOError"))
         }
 
     }

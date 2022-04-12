@@ -1,38 +1,86 @@
 package com.test.tuturu.presentation.vm
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.test.tuturu.common.Status
+import com.test.tuturu.domain.model.DataType
+import com.test.tuturu.domain.model.Item
+import com.test.tuturu.domain.usecase.GetPlanetsUseCase
 import com.test.tuturu.domain.usecase.GetStarshipsUseCase
+import com.test.tuturu.domain.usecase.UseCase
 import com.test.tuturu.presentation.vm.state.ItemsState
 import kotlinx.coroutines.flow.*
 
 class MainViewModel(
-    val getStarshipsUseCase: GetStarshipsUseCase
-):ViewModel() {
+    private val getStarshipsUseCase: GetStarshipsUseCase,
+    private val getPlanetsUseCase: GetPlanetsUseCase
+): ViewModel() {
 
-    private val _starshipState = mutableStateOf(ItemsState())
-    val itemsState: State<ItemsState> = _starshipState
+    val cacheMap: MutableMap<String, ItemsState> = mutableMapOf()
+
+    private val _itemState = mutableStateOf(ItemsState())
+    val itemState: State<ItemsState> = _itemState
+
+
+
+
+
+    fun changeData(dataType: String){
+        when(dataType){
+            DataType.STARSHIPS.name -> {
+                downloadData (getStarshipsUseCase)
+            }
+            DataType.PLANETS.name -> {
+                downloadData(getPlanetsUseCase)
+            }
+
+        }
+
+    }
 
     init {
+        downloadData (getPlanetsUseCase)
+    }
 
-            getStarshipsUseCase().onEach { response ->
+    fun downloadData(
+        useCase: UseCase
+    ){
+        val key = useCase.dataType
+
+        if (cacheMap.containsKey(key)){
+            _itemState.value = cacheMap[key]!!
+        }
+        else{
+
+            useCase().onEach { response ->
                 when (response) {
-                    is Status.Loading -> _starshipState.value = ItemsState()
+                    is Status.Loading<List<Item>> -> _itemState.value = ItemsState()
+                    is Status.Success<List<Item>> -> {
 
-                    is Status.Success -> _starshipState.value = ItemsState(
-                        data = response.data ?: emptyList(),
-                        isLoading = false
-                    )
+                        val state: ItemsState = ItemsState(
+                            data = response.data ?: emptyList(),
+                            isLoading = false
+                        )
 
+                        cacheMap[key] = state
+
+                        _itemState.value = cacheMap[key]!!
+
+                    }
                 }
 
             }.launchIn(viewModelScope)
 
 
+        }
+
+
+
     }
+
 
 
 

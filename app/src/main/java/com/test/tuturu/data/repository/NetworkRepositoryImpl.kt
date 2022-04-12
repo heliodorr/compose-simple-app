@@ -8,16 +8,18 @@ import com.test.tuturu.domain.model.StarshipItem
 import com.test.tuturu.domain.repository.NetworkRepository
 
 class NetworkRepositoryImpl(
-    val api: SWApi
+    private val api: SWApi
 ): NetworkRepository {
 
     override suspend fun getStarshipItemsList(): List<StarshipItem> {
-        return api.getStarships().starships
+        return api.getStarshipsHolder()
+            .starships
             .map { it.toStarshipItem() }
     }
 
     override suspend fun getPlanetItemsList(): List<PlanetItem> {
-        return api.getPlanets().planets
+        return api.getPlanetsHolder()
+            .planets
             .map { it.toPlanetItem() }
     }
 

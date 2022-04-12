@@ -7,11 +7,9 @@ import retrofit2.http.GET
 interface SWApi {
 
     @GET("starships/")
-    suspend fun getStarships(): StarshipDtoHolder
+    suspend fun getStarshipsHolder(): StarshipDtoHolder
 
     @GET("planets/")
-    suspend fun getPlanets(): PlanetDtoHolder
-
-
+    suspend fun getPlanetsHolder(): PlanetDtoHolder
 
 }
