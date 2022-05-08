@@ -1,18 +1,16 @@
 package com.test.simpleapp.domain.model
 
 data class PlanetItem(
+
     override val name: String,
     val climate: String,
     val diameter: String,
     val gravity: String,
     val orbitalPeriod: String,
-    val population: String,
-    val rotationPeriod: String,
-    val surfaceWater: String,
-    val terrain: String
+
 ): Item() {
 
-    override val data: List<Pair<String, String>> = listOf(
+    override val details: List<Pair<String, String>> = listOf(
         Pair(climateKey, climate),
         Pair(diameterKey, diameter),
         Pair(gravityKey, gravity),

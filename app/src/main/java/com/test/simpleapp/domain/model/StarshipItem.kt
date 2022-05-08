@@ -1,18 +1,16 @@
 package com.test.simpleapp.domain.model
 
 data class StarshipItem(
+
     override val name: String,
     val model: String,
     val manufacturer: String,
     val length: String,
     val costInCredits: String,
-    val crew: String,
-    val passengers: String,
-    val starshipClass: String,
-    val cargoCapacity: String
+
 ) : Item() {
 
-    override val data: List<Pair<String, String>> = listOf(
+    override val details: List<Pair<String, String>> = listOf(
         Pair(modelKey, model),
         Pair(manufacturerKey, manufacturer),
         Pair(lengthKey, length),

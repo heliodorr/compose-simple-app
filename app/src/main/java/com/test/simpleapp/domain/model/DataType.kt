@@ -2,5 +2,12 @@ package com.test.simpleapp.domain.model
 
 enum class DataType {
     STARSHIPS,
-    PLANETS
+    PLANETS;
+
+    companion object {
+        fun getByValue(value: String): DataType {
+            return DataType.values().find { it.name.equals(value) } ?: PLANETS
+        }
+    }
+
 }

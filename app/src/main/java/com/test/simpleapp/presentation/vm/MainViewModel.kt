@@ -1,80 +1,212 @@
 package com.test.simpleapp.presentation.vm
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.test.simpleapp.domain.common.Status
+import com.test.simpleapp.domain.common.StatusData
 import com.test.simpleapp.domain.model.DataType
 import com.test.simpleapp.domain.model.Item
-import com.test.simpleapp.domain.usecase.GetPlanetsUseCase
-import com.test.simpleapp.domain.usecase.GetStarshipsUseCase
-import com.test.simpleapp.domain.usecase.UseCase
-import com.test.simpleapp.presentation.vm.state.ItemsState
+import com.test.simpleapp.domain.usecase.items.GetDataFlowUseCase
+import com.test.simpleapp.domain.usecase.items.GetNavigationDataUseCase
+import com.test.simpleapp.domain.usecase.items.GetRefreshedDataUseCase
+import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.flow.*
 
 class MainViewModel(
-    private val getStarshipsUseCase: GetStarshipsUseCase,
-    private val getPlanetsUseCase: GetPlanetsUseCase
+    private val getRefreshedDataUseCase: GetRefreshedDataUseCase,
+    private val getNavigationDataUseCase: GetNavigationDataUseCase
 ): ViewModel() {
 
-    val cacheMap: MutableMap<String, ItemsState> = mutableMapOf()
+    private var currentDataType: DataType
 
-    private val _itemState = mutableStateOf(ItemsState())
-    val itemState: State<ItemsState> = _itemState
-
-    fun changeData(dataType: String){
-        when(dataType){
-            DataType.STARSHIPS.name -> {
-                downloadData (getStarshipsUseCase)
-            }
-            DataType.PLANETS.name -> {
-                downloadData(getPlanetsUseCase)
-            }
-
-        }
-
-    }
+    private val _itemState: MutableState<StatusData> = mutableStateOf(Status.Loading())
+    val itemState: State<StatusData> = _itemState
 
     init {
-        downloadData (getPlanetsUseCase)
+        currentDataType = DataType.PLANETS
+        refreshData(currentDataType)
     }
 
-    fun downloadData(
-        useCase: UseCase
+
+    fun navigationDataChange(dataType: DataType){
+        downloadData(dataType, getNavigationDataUseCase)
+    }
+
+    fun refreshData(dataType: DataType) {
+        downloadData(dataType, getRefreshedDataUseCase)
+    }
+
+    fun refresh() {
+        downloadData(useCase = getRefreshedDataUseCase)
+    }
+
+
+    private fun downloadData(
+
+        dataType: DataType = currentDataType,
+
+        useCase: GetDataFlowUseCase
+
     ){
-        val key = useCase.dataType
+        Log.d("AAA", "MainViewModel/TRYNA TO DOWNLOAD")
 
-        if (cacheMap.containsKey(key)){
-            _itemState.value = cacheMap[key]!!
-        }
-        else{
+        currentDataType = dataType
 
-            useCase().onEach { response ->
-                when (response) {
-                    is com.test.simpleapp.common.Status.Loading<List<Item>> -> _itemState.value = ItemsState()
-                    is com.test.simpleapp.common.Status.Success<List<Item>> -> {
-
-                        val state: ItemsState = ItemsState(
-                            data = response.data ?: emptyList(),
-                            isLoading = false
-                        )
-
-                        cacheMap[key] = state
-
-                        _itemState.value = cacheMap[key]!!
-
-                    }
-                }
-
-            }.launchIn(viewModelScope)
-
-
-        }
-
-
-
+        useCase(dataType)
+            .onEach{ _itemState.value = it}
+            .launchIn(viewModelScope)
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -85,4 +217,14 @@ class MainViewModel(
 
 
 }
+
+
+
+
+
+
+
+
+
+
 
