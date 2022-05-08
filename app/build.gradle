@@ -1,5 +1,9 @@
+
 plugins {
+
+    id 'kotlin-android-extensions'
     id 'com.android.application'
+    id 'kotlin-kapt'
     id 'org.jetbrains.kotlin.android'
 }
 
@@ -7,8 +11,8 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.test.tuturu"
-        minSdk 26
+        applicationId "com.test.simpleapp"
+        minSdk 30
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -45,11 +49,19 @@ android {
     }
 }
 
-dependencies {
 
+
+dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+
+    implementation 'androidx.room:room-runtime:2.4.2'
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+
+
 
 
     implementation "io.insert-koin:koin-android:3.2.0-beta-1"
@@ -66,4 +78,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.19.0"
 }
