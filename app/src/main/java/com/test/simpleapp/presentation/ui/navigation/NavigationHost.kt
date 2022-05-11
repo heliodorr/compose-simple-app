@@ -55,11 +55,11 @@ fun ItemsNavigationHost(
                    defaultValue = DataType.PLANETS.name
                }
            )
-       ){ backStack ->
+       ) { backStack ->
 
            val dataTypeArg: String? = backStack.arguments?.getString(Nav.ItemsList.DATA_TYPE_ARG)
 
-           if(dataTypeArg!=null) {
+           if (dataTypeArg != null) {
                val dataType: DataType = DataType.getByValue(dataTypeArg)
                viewModel.navigationDataChange(dataType)
            }
@@ -72,16 +72,16 @@ fun ItemsNavigationHost(
                    )
                }
            )
-
        }
-        composable(
+
+       composable(
             route = Nav.DetailsList.COMPLETE_ROUTE,
             arguments = listOf(
                 navArgument(Nav.DetailsList.INDEX_ARG) {
                     type = NavType.IntType
                 }
             )
-        ){ backStack ->
+       ){ backStack ->
 
             val index = backStack.arguments?.getInt(Nav.DetailsList.INDEX_ARG) ?: 0
             val itemState = viewModel.itemState.value
@@ -97,7 +97,7 @@ fun ItemsNavigationHost(
 
             }
 
-        }
+       }
 
     }
 
