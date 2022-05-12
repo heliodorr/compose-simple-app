@@ -1,7 +1,5 @@
 package com.helio.compose.simpleapp.domain.usecase.items
 
-
-import android.util.Log
 import com.helio.compose.simpleapp.domain.common.StatusData
 import com.helio.compose.simpleapp.domain.model.DataType
 import com.helio.compose.simpleapp.domain.repository.MainRepository
@@ -13,7 +11,8 @@ class GetNavigationDataUseCase(
 ) : GetDataFlowUseCase {
 
     override operator fun invoke(dataType: DataType): Flow<StatusData> {
-        Log.d("AAA", "USECASE CACHED DATA/getPlanetItemsList")
+
         return mainRepository.getCachedDataByDataType(dataType)
+
     }
 }

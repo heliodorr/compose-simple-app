@@ -10,7 +10,9 @@ class GetRefreshedDataUseCase(
 ) : GetDataFlowUseCase {
 
     override operator fun invoke(dataType: DataType): Flow<StatusData> {
+
         return mainRepository.getRefreshedDataByDataType(dataType)
+
     }
 
 }

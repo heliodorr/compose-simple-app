@@ -14,16 +14,11 @@ class NetworkRepositoryImpl(
 
     override suspend fun getStarshipItemsList(): List<StarshipItem> {
 
-        Log.d("AAA", "NetworkRepositoryImpl/getStarshipItemsList")
+
         val forReturn = api
             .getStarshipsHolder()
             .starships
-            .map {
-                Log.d("AAA", "1************************************************")
-                it.toStarshipItem()
-            }
-
-        Log.d("AAA", "2************************************************")
+            .map { it.toStarshipItem() }
 
         return forReturn;
 
@@ -32,17 +27,11 @@ class NetworkRepositoryImpl(
 
     override suspend fun getPlanetItemsList(): List<PlanetItem> {
 
-        Log.d("AAA", "NetworkRepositoryImpl/getPlanetItemsList")
-
         val forReturn = api
             .getPlanetsHolder()
             .planets
-            .map {
-                Log.d("AAA", "*** inside mapper")
-                it.toPlanetItem()
-            }
+            .map { it.toPlanetItem() }
 
-        Log.d("AAA", "NetworkRepositoryImpl/getPlanetItemsList *** after with timeout")
         return forReturn
 
     }

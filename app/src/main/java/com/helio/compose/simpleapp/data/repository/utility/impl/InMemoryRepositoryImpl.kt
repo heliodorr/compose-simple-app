@@ -39,7 +39,7 @@ class InMemoryRepositoryImpl(
     override fun addLastStarships(data: List<StarshipItem>) {
 
         GlobalScope.launch(Dispatchers.IO) {
-            Log.d("AAA", "InMemoryRepositoryImpl/ST")
+
             dao.refreshStarships( data.map { StarshipItemEntity(it) } )
         }
 
@@ -48,7 +48,7 @@ class InMemoryRepositoryImpl(
     override fun addLastPlanets(data: List<PlanetItem>) {
 
         GlobalScope.launch(Dispatchers.IO) {
-            Log.d("AAA", "InMemoryRepositoryImpl/ST")
+
             dao.refreshPlanets( data.map { PlanetItemEntity(it) } )
         }
     }

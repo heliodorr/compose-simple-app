@@ -20,14 +20,12 @@ class MainRepositoryImpl(
 
 
     private suspend fun bindRepos(dataType: DataType): StatusData {
-        Log.d("AAA", "MainRepositoryImpl/bindRepos")
+
         when (dataType) {
+
             DataType.PLANETS -> {
 
                 try {
-
-                    Log.d("AAA", "MainRepositoryImpl/bindReposTRY")
-
 
                     val dataList = networkRepository.getPlanetItemsList()
 
@@ -36,18 +34,12 @@ class MainRepositoryImpl(
                     )
 
                     cacheRepository.addData(dataType, statusList)
-
-                    Log.d("AAA", "MainRepositoryImpl/bindReposAFTERCACHE")
-
                     inMemoryRepository.addLastPlanets(dataList)
 
                     return statusList
 
 
                 } catch (e: Throwable){
-                    Log.d("AAA", "MainRepositoryImpl/${e.toString()}")
-                    Log.d("AAA", "MainRepositoryImpl/${e.message}")
-                    Log.d("AAA", "MainRepositoryImpl/bindReposCATCH")
 
                     val dataList = Status.Outdated(
                         inMemoryRepository.getLast(dataType)
@@ -63,8 +55,6 @@ class MainRepositoryImpl(
             DataType.STARSHIPS -> {
 
                 try {
-                    Log.d("AAA", "MainRepositoryImpl/bindReposTRY")
-
 
                     val dataList = networkRepository.getStarshipItemsList()
 
@@ -74,17 +64,11 @@ class MainRepositoryImpl(
 
                     cacheRepository.addData(dataType, statusList)
 
-                    Log.d("AAA", "MainRepositoryImpl/bindReposAFTERCACHE")
-
                     inMemoryRepository.addLastStarships(dataList)
 
                     return statusList
 
                 } catch (e: Throwable){
-                    Log.d("AAA", "MainRepositoryImpl/${e.toString()}")
-                    Log.d("AAA", "MainRepositoryImpl/${e.message}")
-                    Log.d("AAA", "MainRepositoryImpl/bindReposCATCH")
-
 
                     val dataList = Status.Outdated(
                         inMemoryRepository.getLast(dataType)
@@ -96,36 +80,28 @@ class MainRepositoryImpl(
 
 
                 }
+
             }
+
         }
 
     }
 
 
     override fun getCachedDataByDataType(dataType: DataType): Flow<StatusData> = flow {
-        Log.d("AAA", "MainRepositoryImpl/******* CACHE ************")
+
         if (
             cacheRepository.contains(dataType)
         ){
 
             val itemsList = cacheRepository.getData(dataType)!!
+            emit(itemsList)
 
-            Log.d("AAA", "MainRepositoryImpl/ EMITING SUCCESS")
-
-            emit(
-                itemsList
-            )
         }
         else {
-            Log.d("AAA", "MainRepositoryImpl/ EMITING LOADING")
-            emit(
-                Status.Loading()
-            )
 
-            Log.d("AAA", "MainRepositoryImpl/ EMITING DATA")
-            emit(
-                bindRepos(dataType)
-            )
+            emit(Status.Loading())
+            emit(bindRepos(dataType))
 
         }
 
@@ -133,19 +109,10 @@ class MainRepositoryImpl(
 
 
     override fun getRefreshedDataByDataType(dataType: DataType): Flow<StatusData> = flow {
-        Log.d("AAA", "MainRepositoryImpl/******* NETWORKING ************")
 
+        emit(Status.Loading())
 
-        Log.d("AAA", "MainRepositoryImpl/ EMITING LOADING")
-        emit(
-            Status.Loading()
-        )
-
-        Log.d("AAA", "MainRepositoryImpl/ EMITING DATA")
-        emit(
-            bindRepos(dataType)
-        )
-
+        emit(bindRepos(dataType))
 
     }
 
